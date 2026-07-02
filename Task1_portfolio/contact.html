@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Contact Samkit Jain — email, socials, and a message form." />
+  <title>Contact — Samkit Jain</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;1,9..144,300;1,9..144,400&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <header class="site-header">
+    <nav class="nav" aria-label="Primary">
+      <a class="brand" href="index.html">
+        <span class="brand-mark" aria-hidden="true"></span>
+        Samkit&nbsp;Jain
+      </a>
+      <ul class="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="about.html">About</a></li>
+        <li><a href="contact.html" aria-current="page">Contact</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+
+    <!-- =========================================================
+         PAGE TITLE
+         ========================================================= -->
+    <section class="page-title container">
+      <p class="eyebrow"><span class="eyebrow--num">§</span> Contact</p>
+      <h1>Say <em>hello</em> —<br />I read every&nbsp;message.</h1>
+    </section>
+
+    <!-- =========================================================
+         FORM + INFO ASIDE
+         ========================================================= -->
+    <section class="section" aria-labelledby="form-heading" style="border-top:none; padding-top:0;">
+      <div class="container">
+
+        <div class="contact-grid">
+
+          <!-- Contact form -->
+          <form class="form" action="#" method="post" aria-labelledby="form-heading">
+            <h2 id="form-heading" class="visually-hidden" style="position:absolute; left:-9999px;">Send a message</h2>
+
+            <div class="field">
+              <label for="name">Your name</label>
+              <input type="text" id="name" name="name" placeholder="First and last, please" required />
+            </div>
+
+            <div class="field">
+              <label for="email">Email address</label>
+              <input type="email" id="email" name="email" placeholder="you@somewhere.com" required />
+            </div>
+
+            <div class="field">
+              <label for="subject">Subject</label>
+              <select id="subject" name="subject">
+                <option>An internship opportunity</option>
+                <option>A freelance project</option>
+                <option>Just saying hi</option>
+                <option>Something else</option>
+              </select>
+            </div>
+
+            <div class="field">
+              <label for="message">Message</label>
+              <textarea id="message" name="message" rows="6" placeholder="Tell me a little about what you have in mind…" required></textarea>
+            </div>
+
+            <button class="btn" type="submit">Send message</button>
+          </form>
+
+          <!-- Aside: static info -->
+          <aside class="contact-aside">
+
+            <div class="info-block">
+              <h4>Email</h4>
+              <p><a href="mailto:samkit.jain@example.com">samkit.jain@example.com</a></p>
+            </div>
+
+            <div class="info-block">
+              <h4>Location</h4>
+              <p>India<br /><span style="color: var(--muted); font-size: 14px;">Working in IST (UTC + 5:30)</span></p>
+            </div>
+
+            <div class="info-block">
+              <h4>Response time</h4>
+              <p style="font-size: 16px; color: var(--ink-soft);">
+                Usually within one working day. If a week passes, a
+                gentle nudge is always welcome.
+              </p>
+            </div>
+
+            <div class="info-block">
+              <h4>Elsewhere</h4>
+              <ul class="socials">
+                <li><a href="#" rel="noopener">GitHub</a></li>
+                <li><a href="#" rel="noopener">LinkedIn</a></li>
+                <li><a href="#" rel="noopener">Read.cv</a></li>
+                <li><a href="#" rel="noopener">Twitter / X</a></li>
+              </ul>
+            </div>
+
+          </aside>
+
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-grid">
+      <div>
+        <p class="footer-mark">Samkit&nbsp;Jain</p>
+        <p class="footer-copy">© 2026 · Built with pure HTML &amp; CSS.</p>
+      </div>
+      <p class="footer-copy" style="text-align:center;">
+        DecodeLabs Industrial Training Kit · Project 01
+      </p>
+      <ul class="footer-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="about.html">About</a></li>
+        <li><a href="#top">Top ↑</a></li>
+      </ul>
+    </div>
+  </footer>
+
+</body>
+</html>
