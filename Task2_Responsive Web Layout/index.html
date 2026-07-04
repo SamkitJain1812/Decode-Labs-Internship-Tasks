@@ -1,0 +1,965 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Brew &amp; Bean — Neighborhood Coffee</title>
+  <meta name="description" content="Brew & Bean — a modern neighborhood coffee shop. Freshly roasted beans, warm space, and honest prices." />
+
+  <style>
+    /* ---------- Design tokens ---------- */
+    :root {
+      --bg: #faf7f2;
+      --surface: #ffffff;
+      --surface-2: #f3ede4;
+      --text: #201a15;
+      --text-muted: #6b5f55;
+      --border: #e8ded1;
+      --accent: #6f4e37;      /* coffee brown */
+      --accent-hover: #55372a;
+      --accent-soft: #efe4d8;
+      --shadow-sm: 0 1px 2px rgba(32, 26, 21, 0.04), 0 1px 3px rgba(32, 26, 21, 0.06);
+      --shadow-md: 0 4px 10px rgba(32, 26, 21, 0.05), 0 10px 30px rgba(32, 26, 21, 0.06);
+      --radius: 14px;
+      --radius-sm: 10px;
+      --container: 1180px;
+      --nav-h: 68px;
+      --ease: cubic-bezier(.2,.7,.2,1);
+    }
+
+    [data-theme="dark"] {
+      --bg: #14100d;
+      --surface: #1c1714;
+      --surface-2: #221c18;
+      --text: #f2ece3;
+      --text-muted: #a89b8d;
+      --border: #2c2520;
+      --accent: #c9a27a;
+      --accent-hover: #dcb890;
+      --accent-soft: #2a2119;
+      --shadow-sm: 0 1px 2px rgba(0,0,0,.3), 0 1px 3px rgba(0,0,0,.35);
+      --shadow-md: 0 4px 10px rgba(0,0,0,.35), 0 10px 30px rgba(0,0,0,.4);
+    }
+
+    /* ---------- Reset ---------- */
+    *, *::before, *::after { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      color: var(--text);
+      background: var(--bg);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      transition: background-color .3s var(--ease), color .3s var(--ease);
+    }
+    img { max-width: 100%; display: block; }
+    a { color: inherit; text-decoration: none; }
+    button { font: inherit; cursor: pointer; border: none; background: none; color: inherit; }
+    h1, h2, h3 { line-height: 1.15; margin: 0 0 .5em; letter-spacing: -0.02em; }
+    p { margin: 0 0 1em; color: var(--text-muted); }
+
+    .container {
+      width: 100%;
+      max-width: var(--container);
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    /* ---------- Buttons ---------- */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 12px 22px;
+      border-radius: 999px;
+      font-weight: 600;
+      font-size: 0.95rem;
+      transition: transform .2s var(--ease), background-color .2s var(--ease), color .2s var(--ease), box-shadow .2s var(--ease);
+      border: 1px solid transparent;
+      white-space: nowrap;
+    }
+    .btn-primary { background: var(--accent); color: #fff; }
+    .btn-primary:hover { background: var(--accent-hover); transform: translateY(-2px); box-shadow: var(--shadow-md); }
+    [data-theme="dark"] .btn-primary { color: #14100d; }
+    .btn-ghost { border-color: var(--border); color: var(--text); }
+    .btn-ghost:hover { background: var(--surface-2); transform: translateY(-2px); }
+
+    /* ---------- Navbar ---------- */
+    .nav {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      height: var(--nav-h);
+      background: color-mix(in srgb, var(--bg) 85%, transparent);
+      backdrop-filter: saturate(140%) blur(12px);
+      -webkit-backdrop-filter: saturate(140%) blur(12px);
+      border-bottom: 1px solid transparent;
+      transition: border-color .3s var(--ease), box-shadow .3s var(--ease);
+    }
+    .nav.scrolled {
+      border-bottom-color: var(--border);
+      box-shadow: var(--shadow-sm);
+    }
+    .nav-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 100%;
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 700;
+      font-size: 1.05rem;
+      letter-spacing: -0.01em;
+    }
+    .brand-mark {
+      width: 32px; height: 32px;
+      border-radius: 50%;
+      background: var(--accent);
+      display: grid; place-items: center;
+      color: #fff;
+      font-size: 1rem;
+    }
+    [data-theme="dark"] .brand-mark { color: #14100d; }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      list-style: none;
+      margin: 0; padding: 0;
+    }
+    .nav-links a {
+      padding: 8px 14px;
+      border-radius: 999px;
+      font-size: 0.94rem;
+      color: var(--text-muted);
+      transition: color .2s var(--ease), background-color .2s var(--ease);
+    }
+    .nav-links a:hover { color: var(--text); background: var(--surface-2); }
+
+    .nav-actions { display: flex; align-items: center; gap: 8px; }
+    .icon-btn {
+      width: 40px; height: 40px;
+      display: grid; place-items: center;
+      border-radius: 50%;
+      color: var(--text-muted);
+      transition: background-color .2s var(--ease), color .2s var(--ease);
+    }
+    .icon-btn:hover { background: var(--surface-2); color: var(--text); }
+    .icon-btn svg { width: 20px; height: 20px; }
+    .theme-toggle .moon { display: none; }
+    [data-theme="dark"] .theme-toggle .sun { display: none; }
+    [data-theme="dark"] .theme-toggle .moon { display: block; }
+
+    .hamburger { display: none; }
+
+    /* ---------- Hero ---------- */
+    .hero {
+      padding: clamp(48px, 8vw, 96px) 0 clamp(48px, 8vw, 96px);
+    }
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.05fr 1fr;
+      gap: 56px;
+      align-items: center;
+    }
+    .eyebrow {
+      display: inline-block;
+      font-size: 0.8rem;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--accent);
+      background: var(--accent-soft);
+      padding: 6px 12px;
+      border-radius: 999px;
+      margin-bottom: 20px;
+    }
+    .hero h1 {
+      font-size: clamp(2.2rem, 5.2vw, 4rem);
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      margin-bottom: 20px;
+    }
+    .hero h1 em {
+      font-style: italic;
+      font-family: Georgia, "Times New Roman", serif;
+      color: var(--accent);
+      font-weight: 500;
+    }
+    .hero p.lead {
+      font-size: 1.1rem;
+      max-width: 46ch;
+      margin-bottom: 32px;
+    }
+    .hero-cta { display: flex; gap: 12px; flex-wrap: wrap; }
+    .hero-media {
+      position: relative;
+      aspect-ratio: 4/5;
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: var(--shadow-md);
+      background: var(--surface-2);
+    }
+    .hero-media img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      transition: transform .8s var(--ease);
+    }
+    .hero-media:hover img { transform: scale(1.03); }
+
+    .hero-meta {
+      display: flex;
+      gap: 40px;
+      margin-top: 48px;
+      padding-top: 32px;
+      border-top: 1px solid var(--border);
+    }
+    .hero-meta .stat strong {
+      display: block;
+      font-size: 1.6rem;
+      color: var(--text);
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+    .hero-meta .stat span {
+      font-size: 0.88rem;
+      color: var(--text-muted);
+    }
+
+    /* ---------- Section base ---------- */
+    section { padding: clamp(56px, 9vw, 110px) 0; }
+    .section-head { max-width: 620px; margin: 0 auto clamp(40px, 6vw, 64px); text-align: center; }
+    .section-head .eyebrow { margin-bottom: 14px; }
+    .section-head h2 {
+      font-size: clamp(1.8rem, 3.6vw, 2.6rem);
+      font-weight: 700;
+    }
+    .section-head p { font-size: 1.05rem; }
+
+    /* ---------- About ---------- */
+    .about { background: var(--surface-2); }
+    .about-grid {
+      display: grid;
+      grid-template-columns: 1fr 1.1fr;
+      gap: 64px;
+      align-items: center;
+    }
+    .about-media {
+      aspect-ratio: 1/1;
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: var(--shadow-md);
+    }
+    .about-media img { width: 100%; height: 100%; object-fit: cover; }
+    .about-copy h2 {
+      font-size: clamp(1.8rem, 3.6vw, 2.5rem);
+    }
+    .about-copy .eyebrow { margin-bottom: 14px; }
+    .about-list { list-style: none; padding: 0; margin: 24px 0 0; }
+    .about-list li {
+      display: flex; gap: 14px; align-items: flex-start;
+      padding: 14px 0;
+      border-top: 1px solid var(--border);
+      color: var(--text);
+    }
+    .about-list li:last-child { border-bottom: 1px solid var(--border); }
+    .about-list .num {
+      color: var(--accent);
+      font-weight: 700;
+      font-variant-numeric: tabular-nums;
+      min-width: 32px;
+    }
+
+    /* ---------- Features (Services) ---------- */
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+    }
+    .feature {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      padding: 32px;
+      border-radius: var(--radius);
+      transition: transform .3s var(--ease), box-shadow .3s var(--ease), border-color .3s var(--ease);
+    }
+    .feature:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-md);
+      border-color: color-mix(in srgb, var(--accent) 30%, var(--border));
+    }
+    .feature-icon {
+      width: 48px; height: 48px;
+      display: grid; place-items: center;
+      background: var(--accent-soft);
+      color: var(--accent);
+      border-radius: 12px;
+      margin-bottom: 20px;
+    }
+    .feature-icon svg { width: 24px; height: 24px; }
+    .feature h3 { font-size: 1.15rem; margin-bottom: 8px; }
+    .feature p { font-size: 0.95rem; margin: 0; }
+
+    /* ---------- Pricing ---------- */
+    .pricing { background: var(--surface-2); }
+    .pricing-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+      align-items: stretch;
+    }
+    .price-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 36px 30px;
+      display: flex;
+      flex-direction: column;
+      transition: transform .3s var(--ease), box-shadow .3s var(--ease);
+      position: relative;
+    }
+    .price-card:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-md);
+    }
+    .price-card.featured {
+      background: var(--accent);
+      color: #fff;
+      border-color: var(--accent);
+    }
+    [data-theme="dark"] .price-card.featured { color: #14100d; }
+    .price-card.featured p, .price-card.featured .price-desc { color: rgba(255,255,255,.8); }
+    [data-theme="dark"] .price-card.featured p,
+    [data-theme="dark"] .price-card.featured .price-desc { color: rgba(20,16,13,.75); }
+    .price-badge {
+      position: absolute;
+      top: -10px; right: 24px;
+      background: var(--text);
+      color: var(--bg);
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 4px 12px;
+      border-radius: 999px;
+    }
+    .price-name {
+      font-size: 0.85rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+      opacity: .85;
+    }
+    .price-amount {
+      font-size: 2.6rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      display: flex;
+      align-items: baseline;
+      gap: 4px;
+      margin-bottom: 4px;
+    }
+    .price-amount .cur { font-size: 1.1rem; font-weight: 600; opacity: .8; }
+    .price-amount .per { font-size: 0.9rem; font-weight: 500; opacity: .7; margin-left: 4px; }
+    .price-desc { font-size: 0.92rem; margin-bottom: 24px; opacity: .85; }
+    .price-features { list-style: none; padding: 0; margin: 0 0 28px; }
+    .price-features li {
+      padding: 8px 0;
+      font-size: 0.94rem;
+      display: flex; align-items: center; gap: 10px;
+    }
+    .price-features svg { width: 16px; height: 16px; flex-shrink: 0; opacity: .8; }
+    .price-card .btn { margin-top: auto; width: 100%; }
+    .price-card.featured .btn-primary { background: #fff; color: var(--accent); }
+    .price-card.featured .btn-primary:hover { background: rgba(255,255,255,.9); }
+    [data-theme="dark"] .price-card.featured .btn-primary { background: #14100d; color: var(--accent); }
+
+    /* ---------- Contact ---------- */
+    .contact-grid {
+      display: grid;
+      grid-template-columns: 1fr 1.1fr;
+      gap: 56px;
+      align-items: start;
+    }
+    .contact-info h2 {
+      font-size: clamp(1.8rem, 3.6vw, 2.5rem);
+    }
+    .contact-list { list-style: none; padding: 0; margin: 24px 0 0; }
+    .contact-list li {
+      display: flex; gap: 14px;
+      padding: 16px 0;
+      border-top: 1px solid var(--border);
+    }
+    .contact-list li:last-child { border-bottom: 1px solid var(--border); }
+    .contact-list .contact-icon {
+      width: 40px; height: 40px;
+      flex-shrink: 0;
+      background: var(--accent-soft);
+      color: var(--accent);
+      border-radius: 10px;
+      display: grid; place-items: center;
+    }
+    .contact-list .contact-icon svg { width: 18px; height: 18px; }
+    .contact-list strong { display: block; color: var(--text); font-size: 0.95rem; margin-bottom: 2px; }
+    .contact-list span { color: var(--text-muted); font-size: 0.92rem; }
+
+    .contact-form {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      padding: 32px;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow-sm);
+    }
+    .field { margin-bottom: 18px; }
+    .field label {
+      display: block;
+      font-size: 0.85rem;
+      font-weight: 600;
+      margin-bottom: 8px;
+      color: var(--text);
+    }
+    .field input,
+    .field textarea {
+      width: 100%;
+      padding: 12px 14px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      background: var(--bg);
+      color: var(--text);
+      font: inherit;
+      font-size: 0.95rem;
+      transition: border-color .2s var(--ease), box-shadow .2s var(--ease);
+    }
+    .field input:focus,
+    .field textarea:focus {
+      outline: none;
+      border-color: var(--accent);
+      box-shadow: 0 0 0 4px color-mix(in srgb, var(--accent) 15%, transparent);
+    }
+    .field textarea { min-height: 130px; resize: vertical; }
+    .field-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+    .contact-form .btn { width: 100%; margin-top: 6px; }
+    .form-note {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      margin: 12px 0 0;
+      text-align: center;
+    }
+
+    /* ---------- Footer ---------- */
+    footer {
+      background: var(--surface-2);
+      border-top: 1px solid var(--border);
+      padding: 56px 0 28px;
+    }
+    .foot-grid {
+      display: grid;
+      grid-template-columns: 1.4fr 1fr 1fr 1fr;
+      gap: 40px;
+      margin-bottom: 40px;
+    }
+    .foot-col h4 {
+      font-size: 0.8rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--text);
+      margin: 0 0 14px;
+    }
+    .foot-col ul { list-style: none; padding: 0; margin: 0; }
+    .foot-col li { padding: 4px 0; }
+    .foot-col a { color: var(--text-muted); font-size: 0.94rem; transition: color .2s var(--ease); }
+    .foot-col a:hover { color: var(--accent); }
+    .foot-brand p { font-size: 0.94rem; max-width: 32ch; margin: 12px 0 18px; }
+    .socials { display: flex; gap: 8px; }
+    .socials a {
+      width: 36px; height: 36px;
+      display: grid; place-items: center;
+      border-radius: 50%;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+      transition: color .2s var(--ease), background-color .2s var(--ease), transform .2s var(--ease);
+    }
+    .socials a:hover { color: var(--accent); transform: translateY(-2px); }
+    .socials svg { width: 16px; height: 16px; }
+    .foot-bottom {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-top: 24px;
+      border-top: 1px solid var(--border);
+      font-size: 0.88rem;
+      color: var(--text-muted);
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    /* ---------- Mobile ---------- */
+    @media (max-width: 768px) {
+      .container { padding: 0 20px; }
+
+      /* Hide desktop nav, show hamburger */
+      .nav-links {
+        position: fixed;
+        top: var(--nav-h);
+        left: 0; right: 0;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0;
+        background: var(--bg);
+        border-bottom: 1px solid var(--border);
+        padding: 12px 20px 20px;
+        transform: translateY(-120%);
+        transition: transform .35s var(--ease);
+        box-shadow: var(--shadow-md);
+      }
+      .nav-links.open { transform: translateY(0); }
+      .nav-links li { width: 100%; }
+      .nav-links a {
+        display: block;
+        padding: 14px 12px;
+        border-radius: var(--radius-sm);
+        font-size: 1rem;
+      }
+      .hamburger {
+        display: grid;
+        place-items: center;
+      }
+      .hamburger .bar {
+        display: block;
+        width: 22px; height: 2px;
+        background: var(--text);
+        border-radius: 2px;
+        transition: transform .3s var(--ease), opacity .2s var(--ease);
+      }
+      .hamburger .bar + .bar { margin-top: 5px; }
+      .hamburger.active .bar:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+      .hamburger.active .bar:nth-child(2) { opacity: 0; }
+      .hamburger.active .bar:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+      /* Stack layouts */
+      .hero-grid { grid-template-columns: 1fr; gap: 40px; }
+      .hero-media { aspect-ratio: 4/3; order: -1; }
+      .hero-meta { gap: 24px; margin-top: 36px; padding-top: 24px; }
+      .hero-meta .stat strong { font-size: 1.3rem; }
+
+      .about-grid { grid-template-columns: 1fr; gap: 36px; }
+      .about-media { aspect-ratio: 4/3; }
+
+      .features-grid { grid-template-columns: 1fr; gap: 16px; }
+      .feature { padding: 26px; }
+
+      .pricing-grid { grid-template-columns: 1fr; gap: 20px; }
+      .price-card.featured { order: -1; }
+
+      .contact-grid { grid-template-columns: 1fr; gap: 40px; }
+      .contact-form { padding: 24px; }
+      .field-row { grid-template-columns: 1fr; }
+
+      .foot-grid { grid-template-columns: 1fr 1fr; gap: 32px; }
+      .foot-brand { grid-column: 1 / -1; }
+      .foot-bottom { flex-direction: column; text-align: center; }
+    }
+
+    /* Reduced motion */
+    @media (prefers-reduced-motion: reduce) {
+      * { animation: none !important; transition: none !important; }
+      html { scroll-behavior: auto; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ============ NAV ============ -->
+  <header class="nav" id="nav">
+    <div class="container nav-inner">
+      <a href="#top" class="brand" aria-label="Brew and Bean home">
+        <span class="brand-mark" aria-hidden="true">
+          <!-- coffee cup icon -->
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 8h1a4 4 0 0 1 0 8h-1"/><path d="M3 8h14v9a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></svg>
+        </span>
+        Brew &amp; Bean
+      </a>
+
+      <nav aria-label="Primary">
+        <ul class="nav-links" id="navLinks">
+          <li><a href="#about">About</a></li>
+          <li><a href="#features">Menu</a></li>
+          <li><a href="#pricing">Pricing</a></li>
+          <li><a href="#contact">Contact</a></li>
+        </ul>
+      </nav>
+
+      <div class="nav-actions">
+        <button class="icon-btn theme-toggle" id="themeToggle" aria-label="Toggle dark mode">
+          <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+          <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+        </button>
+        <button class="icon-btn hamburger" id="hamburger" aria-label="Toggle menu" aria-expanded="false" aria-controls="navLinks">
+          <span class="bar"></span>
+          <span class="bar"></span>
+          <span class="bar"></span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main id="top">
+
+    <!-- ============ HERO ============ -->
+    <section class="hero">
+      <div class="container hero-grid">
+        <div>
+          <span class="eyebrow">Neighborhood Coffee</span>
+          <h1>Slow mornings, <em>strong coffee.</em></h1>
+          <p class="lead">Small-batch roasts, seasonal pastries, and a warm corner to disappear into. Open every day from sunrise to sunset.</p>
+          <div class="hero-cta">
+            <a href="#pricing" class="btn btn-primary">See the menu</a>
+            <a href="#about" class="btn btn-ghost">Our story</a>
+          </div>
+
+          <div class="hero-meta">
+            <div class="stat"><strong>12</strong><span>Signature blends</span></div>
+            <div class="stat"><strong>7am–8pm</strong><span>Every day</span></div>
+            <div class="stat"><strong>4.9★</strong><span>1.2k reviews</span></div>
+          </div>
+        </div>
+        <div class="hero-media">
+          <img src="https://images.unsplash.com/photo-1497935586351-b67a49e012bf?auto=format&fit=crop&w=1200&q=80" alt="A latte with heart-shaped foam art on a wooden table" loading="eager" />
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ ABOUT ============ -->
+    <section class="about" id="about">
+      <div class="container about-grid">
+        <div class="about-media">
+          <img src="https://images.unsplash.com/photo-1453614512568-c4024d13c247?auto=format&fit=crop&w=1000&q=80" alt="Barista carefully pouring espresso into a small cup" loading="lazy" />
+        </div>
+        <div class="about-copy">
+          <span class="eyebrow">Our Story</span>
+          <h2>Roasted with care, served with warmth.</h2>
+          <p>Brew &amp; Bean started in 2019 as a two-person espresso cart on a rainy Tuesday. Today we're a full café — but our promise hasn't changed: honest beans, patient technique, and a room that feels like a good friend's kitchen.</p>
+          <ul class="about-list">
+            <li><span class="num">01</span><span>Beans sourced directly from farms in Ethiopia, Colombia, and Guatemala.</span></li>
+            <li><span class="num">02</span><span>Small-batch roasted in-house every Sunday morning.</span></li>
+            <li><span class="num">03</span><span>Pastries baked fresh daily by our friends at Rosemary Bakery next door.</span></li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ FEATURES / SERVICES ============ -->
+    <section id="features">
+      <div class="container">
+        <div class="section-head">
+          <span class="eyebrow">What We Do</span>
+          <h2>More than a cup of coffee.</h2>
+          <p>Everything we serve is chosen for one reason — it makes the morning a little better.</p>
+        </div>
+        <div class="features-grid">
+          <article class="feature">
+            <div class="feature-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 8h1a4 4 0 0 1 0 8h-1"/><path d="M3 8h14v9a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></svg>
+            </div>
+            <h3>Fresh Roasts</h3>
+            <p>Single-origin beans roasted weekly in our back-room roastery. Never older than seven days.</p>
+          </article>
+
+          <article class="feature">
+            <div class="feature-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21v-4a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4v4"/><rect x="4" y="3" width="16" height="10" rx="2"/><line x1="8" y1="7" x2="16" y2="7"/></svg>
+            </div>
+            <h3>Cozy Space</h3>
+            <p>Soft chairs, warm light, free Wi-Fi, and outlets at every table. Stay as long as you like.</p>
+          </article>
+
+          <article class="feature">
+            <div class="feature-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15 14"/></svg>
+            </div>
+            <h3>Quick Service</h3>
+            <p>Order at the counter or skip the line with our app. Most drinks ready in under three minutes.</p>
+          </article>
+
+          <article class="feature">
+            <div class="feature-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+            </div>
+            <h3>Fresh Pastries</h3>
+            <p>Croissants, cardamom buns, and sourdough delivered every morning from the bakery next door.</p>
+          </article>
+
+          <article class="feature">
+            <div class="feature-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+            </div>
+            <h3>Loyalty Perks</h3>
+            <p>Every tenth drink is on us. Free birthday coffee. Little rewards, big smiles.</p>
+          </article>
+
+          <article class="feature">
+            <div class="feature-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 15 8h6l-5 4 2 8-6-4-6 4 2-8-5-4h6z"/></svg>
+            </div>
+            <h3>Events &amp; Classes</h3>
+            <p>Monthly cupping sessions, latte-art workshops, and open-mic Fridays. Everyone's welcome.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ PRICING ============ -->
+    <section class="pricing" id="pricing">
+      <div class="container">
+        <div class="section-head">
+          <span class="eyebrow">The Menu</span>
+          <h2>Simple prices. Real coffee.</h2>
+          <p>No secret markups, no confusing sizes. Just three honest tiers to fit how you drink.</p>
+        </div>
+
+        <div class="pricing-grid">
+          <article class="price-card">
+            <div class="price-name">Espresso</div>
+            <div class="price-amount"><span class="cur">$</span>3<span class="per">/cup</span></div>
+            <p class="price-desc">The classic. Short, strong, and no-nonsense.</p>
+            <ul class="price-features">
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Double-shot espresso</li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>House blend</li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Free refill on drip</li>
+            </ul>
+            <a href="#contact" class="btn btn-ghost">Order now</a>
+          </article>
+
+          <article class="price-card featured">
+            <div class="price-badge">Popular</div>
+            <div class="price-name">Signature</div>
+            <div class="price-amount"><span class="cur">$</span>5<span class="per">/cup</span></div>
+            <p class="price-desc">Our seasonal specials, made with milk of your choice.</p>
+            <ul class="price-features">
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Lattes, mochas, cortados</li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Oat, almond, or whole milk</li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Free flavor add-on</li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Latte art on request</li>
+            </ul>
+            <a href="#contact" class="btn btn-primary">Order now</a>
+          </article>
+
+          <article class="price-card">
+            <div class="price-name">Premium</div>
+            <div class="price-amount"><span class="cur">$</span>7<span class="per">/cup</span></div>
+            <p class="price-desc">Reserve single-origin, pour-over style. For slow mornings.</p>
+            <ul class="price-features">
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Rotating single-origin</li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Hand-poured V60</li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Tasting notes card</li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Barista walk-through</li>
+            </ul>
+            <a href="#contact" class="btn btn-ghost">Order now</a>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ CONTACT ============ -->
+    <section id="contact">
+      <div class="container">
+        <div class="section-head">
+          <span class="eyebrow">Say Hello</span>
+          <h2>Drop by, or drop a line.</h2>
+          <p>Booking a table for a group, planning an event, or just curious about the beans? We'd love to hear from you.</p>
+        </div>
+
+        <div class="contact-grid">
+          <div class="contact-info">
+            <ul class="contact-list">
+              <li>
+                <span class="contact-icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                </span>
+                <div><strong>Visit us</strong><span>42 Rosemary Lane, Portland, OR 97201</span></div>
+              </li>
+              <li>
+                <span class="contact-icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15 14"/></svg>
+                </span>
+                <div><strong>Open hours</strong><span>Mon–Sun · 7:00 am – 8:00 pm</span></div>
+              </li>
+              <li>
+                <span class="contact-icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+                </span>
+                <div><strong>Call</strong><span>(503) 555-0142</span></div>
+              </li>
+              <li>
+                <span class="contact-icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+                </span>
+                <div><strong>Email</strong><span>hello@brewandbean.co</span></div>
+              </li>
+            </ul>
+          </div>
+
+          <form class="contact-form" id="contactForm" novalidate>
+            <div class="field-row">
+              <div class="field">
+                <label for="fname">First name</label>
+                <input type="text" id="fname" name="fname" placeholder="Jane" required />
+              </div>
+              <div class="field">
+                <label for="lname">Last name</label>
+                <input type="text" id="lname" name="lname" placeholder="Doe" required />
+              </div>
+            </div>
+            <div class="field">
+              <label for="email">Email</label>
+              <input type="email" id="email" name="email" placeholder="you@example.com" required />
+            </div>
+            <div class="field">
+              <label for="subject">Subject</label>
+              <input type="text" id="subject" name="subject" placeholder="Table for 4 on Saturday" />
+            </div>
+            <div class="field">
+              <label for="message">Message</label>
+              <textarea id="message" name="message" placeholder="Tell us a little about what you're looking for…" required></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary">Send message</button>
+            <p class="form-note">We usually reply within a few hours ☕</p>
+          </form>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ============ FOOTER ============ -->
+  <footer>
+    <div class="container">
+      <div class="foot-grid">
+        <div class="foot-col foot-brand">
+          <div class="brand">
+            <span class="brand-mark" aria-hidden="true">
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 8h1a4 4 0 0 1 0 8h-1"/><path d="M3 8h14v9a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></svg>
+            </span>
+            Brew &amp; Bean
+          </div>
+          <p>A small neighborhood café built around honest coffee and good conversation.</p>
+          <div class="socials">
+            <a href="#" aria-label="Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg></a>
+            <a href="#" aria-label="Twitter"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"/></svg></a>
+            <a href="#" aria-label="Facebook"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg></a>
+          </div>
+        </div>
+
+        <div class="foot-col">
+          <h4>Café</h4>
+          <ul>
+            <li><a href="#about">About</a></li>
+            <li><a href="#features">Menu</a></li>
+            <li><a href="#pricing">Pricing</a></li>
+            <li><a href="#contact">Contact</a></li>
+          </ul>
+        </div>
+
+        <div class="foot-col">
+          <h4>Visit</h4>
+          <ul>
+            <li><a href="#">42 Rosemary Lane</a></li>
+            <li><a href="#">Portland, OR</a></li>
+            <li><a href="#">7am – 8pm daily</a></li>
+          </ul>
+        </div>
+
+        <div class="foot-col">
+          <h4>More</h4>
+          <ul>
+            <li><a href="#">Wholesale</a></li>
+            <li><a href="#">Events</a></li>
+            <li><a href="#">Careers</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="foot-bottom">
+        <div>© 2026 Brew &amp; Bean Coffee Co. All rights reserved.</div>
+        <div>Made with ☕ by a DecodeLabs intern.</div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ============ SCRIPT ============ -->
+  <script>
+    // ---------- Theme toggle (with persistence) ----------
+    const themeToggle = document.getElementById('themeToggle');
+    const root = document.documentElement;
+    const saved = localStorage.getItem('bb-theme');
+    if (saved === 'dark' || (!saved && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+      root.setAttribute('data-theme', 'dark');
+    }
+    themeToggle.addEventListener('click', () => {
+      const isDark = root.getAttribute('data-theme') === 'dark';
+      if (isDark) {
+        root.removeAttribute('data-theme');
+        localStorage.setItem('bb-theme', 'light');
+      } else {
+        root.setAttribute('data-theme', 'dark');
+        localStorage.setItem('bb-theme', 'dark');
+      }
+    });
+
+    // ---------- Hamburger menu ----------
+    const hamburger = document.getElementById('hamburger');
+    const navLinks = document.getElementById('navLinks');
+    const closeMenu = () => {
+      hamburger.classList.remove('active');
+      navLinks.classList.remove('open');
+      hamburger.setAttribute('aria-expanded', 'false');
+    };
+    hamburger.addEventListener('click', () => {
+      const open = navLinks.classList.toggle('open');
+      hamburger.classList.toggle('active', open);
+      hamburger.setAttribute('aria-expanded', String(open));
+    });
+    // Close menu when a link is tapped
+    navLinks.querySelectorAll('a').forEach(a => a.addEventListener('click', closeMenu));
+    // Close menu when resizing to desktop
+    window.addEventListener('resize', () => {
+      if (window.innerWidth > 768) closeMenu();
+    });
+
+    // ---------- Sticky nav shadow on scroll ----------
+    const nav = document.getElementById('nav');
+    const onScroll = () => {
+      nav.classList.toggle('scrolled', window.scrollY > 8);
+    };
+    document.addEventListener('scroll', onScroll, { passive: true });
+    onScroll();
+
+    // ---------- Contact form (demo) ----------
+    document.getElementById('contactForm').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const btn = e.target.querySelector('button[type="submit"]');
+      const original = btn.textContent;
+      btn.textContent = 'Sent — thanks! ☕';
+      btn.disabled = true;
+      setTimeout(() => {
+        e.target.reset();
+        btn.textContent = original;
+        btn.disabled = false;
+      }, 2200);
+    });
+  </script>
+</body>
+</html>
