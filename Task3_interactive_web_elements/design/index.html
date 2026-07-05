@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Interactive Web Elements — Project 3</title>
+<link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+  <!-- ============ HEADER ============ -->
+  <header class="site-header">
+    <div class="brand">
+      <span class="brand-dot"></span>
+      <span class="brand-name">Project 3</span>
+    </div>
+
+    <nav class="nav">
+      <a href="#interact">Interact</a>
+      <a href="#todo">Tasks</a>
+      <a href="#gallery">Gallery</a>
+      <a href="#form">Form</a>
+    </nav>
+
+    <button id="theme-toggle" class="theme-btn" aria-label="Toggle dark mode">
+      <span class="theme-icon">☾</span>
+      <span class="theme-label">Dark</span>
+    </button>
+  </header>
+
+  <!-- ============ HERO ============ -->
+  <section class="hero">
+    <p class="eyebrow">DecodeLabs · Industrial Training Kit</p>
+    <h1>Interactive Web <span class="accent">Elements</span></h1>
+    <p class="sub">
+      A minimal demonstration of DOM manipulation — buttons, toggles,
+      dynamic content and real-time user interaction using pure JavaScript.
+    </p>
+    <div class="hero-meta">
+      <span>Batch 2026</span>
+      <span class="dot">•</span>
+      <span>Frontend Development</span>
+      <span class="dot">•</span>
+      <span id="live-clock">--:--:--</span>
+    </div>
+  </section>
+
+  <!-- ============ INTERACT: COUNTER + LIVE TEXT ============ -->
+  <section id="interact" class="panel-grid">
+
+    <div class="panel">
+      <h2>01 · Counter</h2>
+      <p class="panel-desc">Button clicks update the DOM in real-time.</p>
+      <div class="counter">
+        <button class="btn-icon" id="decrement">−</button>
+        <span id="count" class="count">0</span>
+        <button class="btn-icon" id="increment">+</button>
+      </div>
+      <button id="reset" class="btn-ghost">Reset</button>
+    </div>
+
+    <div class="panel">
+      <h2>02 · Live Text</h2>
+      <p class="panel-desc">Type below — the output updates instantly.</p>
+      <input type="text" id="live-input" placeholder="Start typing…" />
+      <p class="live-output">
+        <span class="muted">Output:</span>
+        <span id="live-output">—</span>
+      </p>
+      <p class="char-count"><span id="char-count">0</span> characters</p>
+    </div>
+
+    <div class="panel">
+      <h2>03 · Accordion</h2>
+      <p class="panel-desc">Click a row to expand its content.</p>
+      <div class="accordion">
+        <div class="acc-item">
+          <button class="acc-head">What is DOM?<span class="chev">+</span></button>
+          <div class="acc-body">The Document Object Model represents the page as a tree of nodes that JavaScript can read and modify.</div>
+        </div>
+        <div class="acc-item">
+          <button class="acc-head">Why interactivity?<span class="chev">+</span></button>
+          <div class="acc-body">Interactivity turns a static layout into a responsive experience that reacts to the user's actions.</div>
+        </div>
+        <div class="acc-item">
+          <button class="acc-head">Tools used<span class="chev">+</span></button>
+          <div class="acc-body">HTML for structure, CSS for style, and plain JavaScript for behaviour — no frameworks.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <h2>04 · Color Picker</h2>
+      <p class="panel-desc">Pick a color to update the accent live.</p>
+      <div class="swatches" id="swatches">
+        <button class="swatch" data-color="#111111" style="background:#111"></button>
+        <button class="swatch" data-color="#2563eb" style="background:#2563eb"></button>
+        <button class="swatch" data-color="#059669" style="background:#059669"></button>
+        <button class="swatch" data-color="#dc2626" style="background:#dc2626"></button>
+        <button class="swatch" data-color="#d97706" style="background:#d97706"></button>
+        <button class="swatch" data-color="#7c3aed" style="background:#7c3aed"></button>
+      </div>
+      <div class="preview-box" id="preview-box">Accent Preview</div>
+    </div>
+
+  </section>
+
+  <!-- ============ TODO LIST ============ -->
+  <section id="todo" class="section">
+    <div class="section-head">
+      <h2>05 · Task List</h2>
+      <p>Add, complete, and remove tasks. State persists to localStorage.</p>
+    </div>
+
+    <form id="todo-form" class="todo-form">
+      <input type="text" id="todo-input" placeholder="Add a new task…" required />
+      <button type="submit" class="btn-primary">Add</button>
+    </form>
+
+    <div class="todo-filters">
+      <button class="filter active" data-filter="all">All</button>
+      <button class="filter" data-filter="active">Active</button>
+      <button class="filter" data-filter="done">Done</button>
+      <span class="todo-count"><span id="todo-count">0</span> items</span>
+    </div>
+
+    <ul id="todo-list" class="todo-list"></ul>
+    <p id="todo-empty" class="empty">No tasks yet. Add one above.</p>
+  </section>
+
+  <!-- ============ IMAGE GALLERY ============ -->
+  <section id="gallery" class="section">
+    <div class="section-head">
+      <h2>06 · Dynamic Gallery</h2>
+      <p>Filter images by category. Click any tile to view full size.</p>
+    </div>
+
+    <div class="gallery-filters" id="gallery-filters">
+      <button class="filter active" data-cat="all">All</button>
+      <button class="filter" data-cat="nature">Nature</button>
+      <button class="filter" data-cat="city">City</button>
+      <button class="filter" data-cat="abstract">Abstract</button>
+    </div>
+
+    <div class="gallery" id="gallery-grid"></div>
+  </section>
+
+  <!-- ============ FORM VALIDATION ============ -->
+  <section id="form" class="section">
+    <div class="section-head">
+      <h2>07 · Form Validation</h2>
+      <p>Real-time input validation with inline feedback.</p>
+    </div>
+
+    <form id="contact-form" class="contact-form" novalidate>
+      <label>
+        <span>Name</span>
+        <input type="text" id="name" required />
+        <small class="err" data-for="name"></small>
+      </label>
+
+      <label>
+        <span>Email</span>
+        <input type="email" id="email" required />
+        <small class="err" data-for="email"></small>
+      </label>
+
+      <label>
+        <span>Message</span>
+        <textarea id="message" rows="4" required></textarea>
+        <small class="err" data-for="message"></small>
+      </label>
+
+      <button type="submit" class="btn-primary">Submit</button>
+      <p id="form-success" class="success" hidden>✓ Message sent successfully.</p>
+    </form>
+  </section>
+
+  <!-- ============ LIGHTBOX ============ -->
+  <div id="lightbox" class="lightbox" hidden>
+    <button class="lightbox-close" id="lightbox-close">×</button>
+    <img id="lightbox-img" src="" alt="" />
+  </div>
+
+  <!-- ============ FOOTER ============ -->
+  <footer class="site-footer">
+    <p>Project 3 · Interactive Web Elements · DecodeLabs 2026</p>
+    <p class="muted">Built with HTML · CSS · Vanilla JavaScript</p>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
