@@ -1,0 +1,1143 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Project 4 — Form Design & Validation · DecodeLabs</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700;9..144,800&family=Instrument+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+<style>
+  /* ---------- design tokens from the DecodeLabs deck ---------- */
+  :root{
+    --sage-50:#eef4ea;
+    --sage-100:#e2ecdb;
+    --sage-200:#c9dcbd;
+    --mint:#bfe0c8;
+    --sky:#a9c8ec;
+    --cream:#f6f2e6;
+    --paper:#faf7ef;
+    --olive-900:#2f3d24;
+    --olive-800:#3a4a2c;
+    --olive-700:#4b5f3a;
+    --olive-500:#6d8757;
+    --olive-400:#8fae74;
+    --ink:#1f2a17;
+    --muted:#6a7562;
+
+    --editorial-red:#c0392b;
+    --editorial-red-soft:#f6d9d4;
+    --drafting-blue:#2f5aa8;
+    --emerald:#2e8b57;
+    --emerald-soft:#dbeee2;
+    --amber:#c98a1a;
+
+    --shadow-sm: 0 1px 0 rgba(31,42,23,.06), 0 2px 6px rgba(31,42,23,.05);
+    --shadow-md: 0 2px 0 rgba(31,42,23,.05), 0 12px 28px rgba(31,42,23,.10);
+    --radius: 14px;
+    --radius-sm: 10px;
+
+    --serif:'Fraunces', 'Cormorant Garamond', ui-serif, Georgia, serif;
+    --sans:'Instrument Sans', ui-sans-serif, system-ui, -apple-system, sans-serif;
+    --mono:'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+  }
+
+  *,*::before,*::after{ box-sizing:border-box; }
+  html,body{ margin:0; padding:0; }
+  body{
+    font-family: var(--sans);
+    color: var(--ink);
+    background:
+      radial-gradient(1200px 700px at 88% -10%, #cfe0f4 0%, transparent 60%),
+      radial-gradient(900px 600px at -10% 110%, #cfe4c5 0%, transparent 55%),
+      linear-gradient(180deg, #eaf1e2 0%, #eef3e7 60%, #e7efe0 100%);
+    min-height:100vh;
+    -webkit-font-smoothing:antialiased;
+    text-rendering:optimizeLegibility;
+  }
+
+  /* ---------- decorative botanicals (echoing the deck) ---------- */
+  .botanical{
+    position:fixed; pointer-events:none; z-index:0; opacity:.55;
+    filter: saturate(.85);
+  }
+  .botanical.tl{ top:-40px; left:-40px; width:280px; transform:rotate(-8deg); }
+  .botanical.br{ bottom:-60px; right:-60px; width:340px; transform:rotate(170deg); }
+  .blob{
+    position:fixed; z-index:0; pointer-events:none; border-radius:50%;
+    filter: blur(2px); opacity:.55;
+  }
+  .blob.a{ top:8vh; right:12vw; width:180px; height:180px; background:#f6d3a8; opacity:.35;}
+  .blob.b{ bottom:14vh; left:8vw; width:140px; height:140px; background:#c6dcae;}
+  .blob.c{ top:38vh; left:44vw; width:80px; height:80px; background:#a9c8ec; opacity:.45;}
+
+  /* ---------- shell ---------- */
+  .shell{
+    position:relative; z-index:1;
+    max-width:1240px;
+    margin:0 auto;
+    padding: 42px 32px 80px;
+  }
+
+  header.masthead{
+    display:flex; align-items:flex-end; justify-content:space-between; gap:24px;
+    padding-bottom:22px;
+    border-bottom:1px dashed rgba(47,61,36,.25);
+    margin-bottom:34px;
+  }
+  .brand{
+    display:flex; align-items:center; gap:12px;
+  }
+  .brand-mark{
+    width:44px; height:44px; border-radius:12px;
+    background: var(--olive-800);
+    color: var(--cream);
+    display:grid; place-items:center;
+    font-family: var(--serif); font-weight:800; font-size:22px;
+    box-shadow: var(--shadow-sm);
+    letter-spacing:-0.02em;
+  }
+  .brand-text{ line-height:1.1; }
+  .brand-text .name{ font-family: var(--serif); font-weight:700; font-size:20px; color: var(--olive-900); }
+  .brand-text .kicker{ font-size:11.5px; color: var(--muted); letter-spacing:.14em; text-transform:uppercase; margin-top:2px;}
+
+  .crumbs{
+    font-size:12px; color: var(--muted); letter-spacing:.1em; text-transform:uppercase;
+    text-align:right;
+  }
+  .crumbs strong{ color: var(--olive-800); font-weight:600; }
+
+  /* ---------- title block ---------- */
+  .titleblock{
+    display:grid; grid-template-columns: 1.15fr .85fr; gap:36px;
+    align-items:end;
+    margin-bottom:34px;
+  }
+  .titleblock h1{
+    font-family: var(--serif);
+    font-weight:700;
+    font-size: clamp(38px, 5.4vw, 64px);
+    line-height:.98;
+    letter-spacing:-0.02em;
+    color: var(--olive-900);
+    margin:0 0 12px;
+  }
+  .titleblock h1 em{
+    font-style: italic;
+    color: var(--olive-700);
+    font-weight:600;
+  }
+  .titleblock .lede{
+    font-size:16px; line-height:1.55; color: var(--olive-800);
+    max-width:52ch;
+  }
+  .titleblock .lede b{ color: var(--olive-900); font-weight:600; }
+  .meta-card{
+    background: var(--paper);
+    border:1px solid rgba(47,61,36,.14);
+    border-radius: var(--radius);
+    padding:18px 20px;
+    box-shadow: var(--shadow-sm);
+    display:grid; grid-template-columns: 1fr 1fr; gap:14px 20px;
+    font-size:13px;
+  }
+  .meta-card dt{
+    font-size:10.5px; letter-spacing:.14em; text-transform:uppercase;
+    color: var(--muted); margin-bottom:3px; font-weight:600;
+  }
+  .meta-card dd{ margin:0; color: var(--olive-900); font-weight:500; }
+  .meta-card dd.mono{ font-family: var(--mono); font-size:12px; }
+  .pill{
+    display:inline-block; padding:3px 10px; border-radius:999px;
+    background: var(--sage-100); color: var(--olive-800);
+    font-size:11px; letter-spacing:.08em; text-transform:uppercase; font-weight:600;
+    border:1px solid rgba(47,61,36,.15);
+  }
+  .pill.optional{ background:#f4e6c8; color:#7a5a10; border-color:#e2c891;}
+
+  /* ---------- phase strip ---------- */
+  .phase-strip{
+    display:grid; grid-template-columns: repeat(4, 1fr); gap:12px;
+    margin-bottom:28px;
+  }
+  .phase{
+    background: rgba(255,255,255,.55);
+    border:1px solid rgba(47,61,36,.15);
+    border-radius: var(--radius-sm);
+    padding:12px 14px;
+    display:flex; gap:12px; align-items:flex-start;
+    transition: background .2s ease, border-color .2s, transform .2s;
+  }
+  .phase[data-active="1"]{
+    background: #fff;
+    border-color: var(--olive-700);
+    box-shadow: 0 6px 18px -8px rgba(47,61,36,.35);
+  }
+  .phase[data-active="0.5"]{
+    background: #fff;
+    border-color: var(--amber);
+  }
+  .phase .num{
+    flex:0 0 auto;
+    width:28px; height:28px; border-radius:8px;
+    background: var(--olive-800); color: var(--cream);
+    display:grid; place-items:center;
+    font-family: var(--serif); font-weight:700; font-size:14px;
+  }
+  .phase[data-active="1"] .num{ background: var(--emerald); }
+  .phase[data-active="0.5"] .num{ background: var(--amber); }
+  .phase .txt{ line-height:1.25; }
+  .phase .txt .k{ font-size:10.5px; letter-spacing:.12em; text-transform:uppercase; color: var(--muted); font-weight:600;}
+  .phase .txt .v{ font-size:13.5px; color: var(--olive-900); font-weight:600; margin-top:2px;}
+
+  /* ---------- main grid ---------- */
+  main.split{
+    display:grid; grid-template-columns: 1.05fr .95fr; gap:28px;
+    align-items:start;
+  }
+  @media (max-width: 960px){
+    main.split{ grid-template-columns: 1fr; }
+    .titleblock{ grid-template-columns: 1fr; }
+    .phase-strip{ grid-template-columns: repeat(2, 1fr); }
+  }
+
+  /* ---------- form card ---------- */
+  .card{
+    background: var(--paper);
+    border:1px solid rgba(47,61,36,.14);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-md);
+    overflow: hidden;
+    position:relative;
+  }
+  .card-head{
+    padding:18px 22px 14px;
+    border-bottom:1px solid rgba(47,61,36,.09);
+    background: linear-gradient(180deg, #fdfaf1, #f6f2e6);
+    display:flex; align-items:center; justify-content:space-between;
+  }
+  .card-head .t{
+    font-family: var(--serif); font-weight:700; font-size:20px; color: var(--olive-900);
+    letter-spacing:-0.01em;
+  }
+  .card-head .sub{
+    font-size:11.5px; color: var(--muted); letter-spacing:.14em; text-transform:uppercase; margin-top:2px;
+  }
+  .traffic{
+    display:flex; gap:6px;
+  }
+  .traffic i{ width:10px; height:10px; border-radius:50%; background:#d6cdb4; display:block; }
+  .traffic i:nth-child(1){ background:#e08a7a;}
+  .traffic i:nth-child(2){ background:#e6c274;}
+  .traffic i:nth-child(3){ background:#8fae74;}
+
+  form.rf{
+    padding: 22px 22px 24px;
+    display:flex; flex-direction:column; gap:18px;
+  }
+
+  .field{
+    display:flex; flex-direction:column; gap:6px;
+    position:relative;
+  }
+  .field label{
+    font-size:13px; font-weight:600; color: var(--olive-900);
+    display:flex; align-items:center; gap:8px;
+  }
+  .field label .req{
+    font-family: var(--mono); font-size:11px; color: var(--editorial-red); font-weight:500;
+  }
+  .field label .hint{
+    margin-left:auto;
+    font-family: var(--mono); font-size:10.5px; color: var(--muted);
+    font-weight:500; letter-spacing:.02em;
+  }
+  .field .control{
+    position:relative;
+  }
+  .field input{
+    width:100%;
+    font: 500 15px/1.4 var(--sans);
+    color: var(--ink);
+    background: #fff;
+    border:1.5px solid #d3d8cc;
+    border-radius: 10px;
+    padding: 12px 42px 12px 14px;
+    transition: border-color .18s ease, box-shadow .18s ease, background .18s;
+    outline:none;
+  }
+  .field input::placeholder{ color:#a9b1a1; font-weight:400;}
+  .field input:focus{
+    border-color: var(--olive-700);
+    box-shadow: 0 0 0 4px rgba(75,95,58,.14);
+    background: #fff;
+  }
+
+  /* status icon inside input */
+  .field .icon{
+    position:absolute; right:12px; top:50%; transform: translateY(-50%);
+    width:22px; height:22px; border-radius:50%;
+    display:grid; place-items:center;
+    color:#fff; font-size:12px; font-weight:700;
+    opacity:0; transition: opacity .18s ease, transform .18s ease;
+    pointer-events:none;
+    font-family: var(--mono);
+  }
+  .field[data-state="valid"] .icon.ok{ opacity:1; background: var(--emerald); }
+  .field[data-state="invalid"] .icon.bad{ opacity:1; background: var(--editorial-red); }
+
+  .field[data-state="valid"] input{
+    border-color: var(--emerald);
+    background: #f5faf6;
+  }
+  .field[data-state="invalid"] input{
+    border-color: var(--editorial-red);
+    background: #fdf3f1;
+  }
+
+  .field .msg{
+    min-height: 18px;
+    font-size:12.5px; line-height:1.4;
+    color: var(--muted);
+    display:flex; align-items:center; gap:6px;
+    font-family: var(--mono);
+    letter-spacing:.005em;
+  }
+  .field[data-state="valid"] .msg{ color: var(--emerald); }
+  .field[data-state="invalid"] .msg{ color: var(--editorial-red); }
+  .field .msg::before{
+    content:""; width:6px; height:6px; border-radius:50%;
+    background: currentColor; opacity:.55;
+    display:inline-block; flex:0 0 auto;
+  }
+
+  /* password strength ribbon */
+  .strength{
+    display:flex; gap:4px; margin-top:2px;
+  }
+  .strength i{
+    flex:1; height:5px; border-radius:3px; background:#e2e6da; transition: background .2s;
+  }
+  .strength[data-level="1"] i:nth-child(-n+1){ background:#e08a7a;}
+  .strength[data-level="2"] i:nth-child(-n+2){ background:#e6c274;}
+  .strength[data-level="3"] i:nth-child(-n+3){ background:#a8c98a;}
+  .strength[data-level="4"] i:nth-child(-n+4){ background: var(--emerald);}
+  .strength[data-level="5"] i{ background: var(--emerald);}
+
+  /* actions */
+  .actions{
+    display:flex; align-items:center; gap:12px; margin-top:6px;
+  }
+  button.btn{
+    appearance:none; border:0; cursor:pointer;
+    font: 600 14px/1 var(--sans);
+    letter-spacing:.02em;
+    padding: 13px 20px;
+    border-radius: 10px;
+    transition: transform .12s ease, box-shadow .18s ease, background .18s;
+  }
+  button.btn.primary{
+    background: var(--olive-800); color: var(--cream);
+    box-shadow: 0 1px 0 rgba(0,0,0,.12), 0 8px 22px -10px rgba(47,61,36,.7);
+  }
+  button.btn.primary:hover{ background: var(--olive-900); transform: translateY(-1px);}
+  button.btn.primary:active{ transform: translateY(0); }
+  button.btn.ghost{
+    background: transparent; color: var(--olive-800);
+    border:1.5px solid rgba(47,61,36,.2);
+  }
+  button.btn.ghost:hover{ background: rgba(47,61,36,.06); }
+
+  .banner{
+    margin-top: 4px;
+    padding: 12px 14px;
+    border-radius: 10px;
+    font-size: 13px; line-height:1.45;
+    display:flex; gap:10px; align-items:flex-start;
+    border:1px solid transparent;
+    opacity:0; transform: translateY(-4px);
+    transition: opacity .25s ease, transform .25s ease;
+    pointer-events:none;
+  }
+  .banner.show{ opacity:1; transform: translateY(0); pointer-events:auto;}
+  .banner.error{ background: var(--editorial-red-soft); color:#7a1e12; border-color:#e8b6ad;}
+  .banner.success{ background: var(--emerald-soft); color:#1d5e3b; border-color:#a8d6b8;}
+  .banner .badge{
+    font-family: var(--mono); font-size:11px; font-weight:700;
+    padding: 2px 8px; border-radius:999px;
+    background: rgba(0,0,0,.08);
+    letter-spacing:.06em;
+  }
+
+  /* ---------- inspector card ---------- */
+  .inspector{
+    background: #1f2a17;
+    color: #dfe6d5;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-md);
+    overflow:hidden;
+    border:1px solid rgba(0,0,0,.2);
+    position:sticky; top: 20px;
+  }
+  .inspector .card-head{
+    background: linear-gradient(180deg, #263320, #1f2a17);
+    border-bottom:1px solid rgba(255,255,255,.08);
+    color: var(--cream);
+  }
+  .inspector .card-head .t{ color:#f4efe0; font-family:var(--serif);}
+  .inspector .card-head .sub{ color:#b6c1a6;}
+  .inspector .traffic i{ opacity:.85; }
+
+  .insp-body{ padding: 18px 20px 20px; display:flex; flex-direction:column; gap:18px;}
+
+  .gates{
+    display:flex; flex-direction:column; gap:10px;
+  }
+  .gate{
+    display:grid; grid-template-columns: 26px 1fr auto; gap:12px; align-items:center;
+    padding: 10px 12px;
+    background: rgba(255,255,255,.03);
+    border:1px solid rgba(255,255,255,.06);
+    border-radius: 10px;
+    font-family: var(--mono);
+    font-size:12.5px;
+    transition: background .18s, border-color .18s;
+  }
+  .gate .dot{
+    width:18px; height:18px; border-radius:50%;
+    background: #3a4a2c; border:1.5px solid #556945;
+    display:grid; place-items:center;
+    color:#dfe6d5; font-size:10px; font-weight:700;
+  }
+  .gate[data-status="pass"]{ background: rgba(46,139,87,.14); border-color: rgba(46,139,87,.5);}
+  .gate[data-status="pass"] .dot{ background: var(--emerald); border-color:#5cba85; color:#fff;}
+  .gate[data-status="fail"]{ background: rgba(192,57,43,.14); border-color: rgba(192,57,43,.5);}
+  .gate[data-status="fail"] .dot{ background: var(--editorial-red); border-color:#e47264; color:#fff;}
+  .gate[data-status="idle"] .dot::after{ content:"·"; }
+  .gate .label{ color:#dfe6d5;}
+  .gate .re{ color:#b6c1a6; font-size:11px; letter-spacing:.01em;}
+  .gate .verdict{
+    font-size:10.5px; letter-spacing:.14em; text-transform:uppercase; font-weight:700;
+    color:#8fa07a;
+  }
+  .gate[data-status="pass"] .verdict{ color:#7dd7a0; }
+  .gate[data-status="fail"] .verdict{ color:#f4a89f; }
+
+  .payload-head{
+    display:flex; align-items:center; justify-content:space-between;
+    font-family: var(--mono); font-size:11.5px; color:#b6c1a6;
+    letter-spacing:.14em; text-transform:uppercase;
+  }
+  .payload-head .state{
+    padding: 3px 10px; border-radius:999px;
+    background:#3a4a2c; color:#dfe6d5; letter-spacing:.1em;
+    border:1px solid rgba(255,255,255,.08);
+  }
+  .payload-head .state.approved{ background: var(--emerald); color:#fff; border-color:transparent;}
+  .payload-head .state.rejected{ background: var(--editorial-red); color:#fff; border-color:transparent;}
+
+  pre.payload{
+    margin:0;
+    background: #141c0f;
+    border:1px solid rgba(255,255,255,.06);
+    border-radius: 10px;
+    padding: 14px 16px;
+    font: 500 12.5px/1.55 var(--mono);
+    color: #dfe6d5;
+    overflow:auto;
+    max-height: 260px;
+    white-space: pre-wrap;
+    word-break: break-word;
+  }
+  pre.payload .k{ color:#a8c98a; }
+  pre.payload .s{ color:#e6c274; }
+  pre.payload .n{ color:#f4a89f; }
+  pre.payload .b{ color:#7dd7a0; }
+  pre.payload .p{ color:#a9c8ec; }
+
+  .a11y-panel{
+    padding: 12px 14px;
+    background: rgba(169,200,236,.08);
+    border:1px dashed rgba(169,200,236,.35);
+    border-radius: 10px;
+    font-family: var(--mono); font-size:11.5px; line-height:1.55;
+    color:#c6d1e6;
+  }
+  .a11y-panel h4{
+    margin:0 0 6px; font: 700 10.5px/1 var(--sans);
+    letter-spacing:.16em; text-transform:uppercase; color:#a9c8ec;
+  }
+  .a11y-panel code{ color:#e6c274;}
+  .a11y-panel .now{
+    display:block; margin-top:8px; padding:8px 10px;
+    background: rgba(0,0,0,.28); border-radius:8px;
+    color:#dfe6d5; min-height:20px;
+  }
+  .a11y-panel .now:empty::before{
+    content:"— silent buffer —"; color:#6f7d63; font-style: italic;
+  }
+
+  /* ---------- footer notes ---------- */
+  .footnote{
+    margin-top:34px; text-align:center;
+    font-family: var(--mono); font-size:11.5px; color: var(--muted);
+    letter-spacing:.06em;
+  }
+  .footnote strong{ color: var(--olive-800);}
+
+  /* ---------- visually hidden but accessible ---------- */
+  .sr-only{
+    position:absolute!important; width:1px; height:1px;
+    padding:0; margin:-1px; overflow:hidden; clip:rect(0 0 0 0);
+    white-space:nowrap; border:0;
+  }
+
+  /* reset gentle bump when field flips valid */
+  @keyframes tickBump { 0%{ transform:translateY(-50%) scale(.6);} 60%{ transform:translateY(-50%) scale(1.15);} 100%{ transform:translateY(-50%) scale(1);} }
+  .field[data-state="valid"] .icon.ok{ animation: tickBump .28s ease; }
+  .field[data-state="invalid"] .icon.bad{ animation: tickBump .28s ease; }
+</style>
+</head>
+<body>
+
+<!-- decorative botanicals -->
+<svg class="botanical tl" viewBox="0 0 200 200" fill="none" aria-hidden="true">
+  <path d="M30 170 C 40 110, 80 60, 160 30" stroke="#6d8757" stroke-width="2.5" stroke-linecap="round"/>
+  <ellipse cx="60" cy="140" rx="18" ry="9" fill="#8fae74" transform="rotate(-30 60 140)"/>
+  <ellipse cx="90" cy="110" rx="20" ry="10" fill="#6d8757" transform="rotate(-40 90 110)"/>
+  <ellipse cx="120" cy="80" rx="18" ry="9" fill="#8fae74" transform="rotate(-50 120 80)"/>
+  <ellipse cx="150" cy="55" rx="14" ry="7" fill="#4b5f3a" transform="rotate(-55 150 55)"/>
+</svg>
+<svg class="botanical br" viewBox="0 0 200 200" fill="none" aria-hidden="true">
+  <path d="M30 170 C 40 110, 80 60, 170 30" stroke="#4b5f3a" stroke-width="2.5" stroke-linecap="round"/>
+  <ellipse cx="60" cy="140" rx="18" ry="9" fill="#6d8757" transform="rotate(-30 60 140)"/>
+  <ellipse cx="95" cy="105" rx="22" ry="11" fill="#8fae74" transform="rotate(-45 95 105)"/>
+  <ellipse cx="135" cy="65" rx="18" ry="9" fill="#6d8757" transform="rotate(-55 135 65)"/>
+</svg>
+<span class="blob a"></span>
+<span class="blob b"></span>
+<span class="blob c"></span>
+
+<div class="shell">
+
+  <!-- masthead -->
+  <header class="masthead">
+    <div class="brand">
+      <div class="brand-mark">DL</div>
+      <div class="brand-text">
+        <div class="name">DecodeLabs</div>
+        <div class="kicker">Frontend Development · Industrial Training Kit</div>
+      </div>
+    </div>
+    <div class="crumbs">
+      Batch <strong>2026</strong> &nbsp;·&nbsp; Project <strong>04 / 04</strong> &nbsp;·&nbsp; <strong>Optional Mastery</strong>
+    </div>
+  </header>
+
+  <!-- title -->
+  <section class="titleblock">
+    <div>
+      <div style="display:flex; gap:8px; margin-bottom:14px;">
+        <span class="pill">Form Design &amp; Validation</span>
+        <span class="pill optional">Optional Mastery Phase</span>
+      </div>
+      <h1>Engineering the <em>Architecture of Trust.</em></h1>
+      <p class="lede">
+        A form is not a collection of input boxes — it is the <b>frontline of application security</b>.
+        This checkpoint follows the <b>Input → Process → Output</b> pipeline: a semantic HTML skeleton,
+        a <code style="font-family:var(--mono);font-size:.92em">preventDefault()</code> shield,
+        a battery of regex logic gates, and an ARIA tether that reads the verdict aloud.
+      </p>
+    </div>
+    <dl class="meta-card" aria-label="Project metadata">
+      <div><dt>Course</dt><dd>Frontend Development P4</dd></div>
+      <div><dt>Track</dt><dd>Industrial Training</dd></div>
+      <div><dt>Key skills</dt><dd>Form handling · Regex · ARIA</dd></div>
+      <div><dt>Deliverable</dt><dd class="mono">index.html</dd></div>
+    </dl>
+  </section>
+
+  <!-- phase progress strip -->
+  <section class="phase-strip" aria-label="IPO pipeline progress">
+    <div class="phase" data-phase="1" data-active="1">
+      <div class="num">1</div>
+      <div class="txt"><div class="k">Structure</div><div class="v">Semantic&nbsp;Skeleton</div></div>
+    </div>
+    <div class="phase" data-phase="2" data-active="1">
+      <div class="num">2</div>
+      <div class="txt"><div class="k">Shield</div><div class="v">preventDefault()</div></div>
+    </div>
+    <div class="phase" data-phase="3" data-active="0">
+      <div class="num">3</div>
+      <div class="txt"><div class="k">Scan</div><div class="v">Regex Logic Gates</div></div>
+    </div>
+    <div class="phase" data-phase="4" data-active="0">
+      <div class="num">4</div>
+      <div class="txt"><div class="k">Communicate</div><div class="v">ARIA Feedback</div></div>
+    </div>
+  </section>
+
+  <!-- main split -->
+  <main class="split">
+
+    <!-- LEFT: the form -->
+    <section class="card" aria-labelledby="form-heading">
+      <div class="card-head">
+        <div>
+          <div class="t" id="form-heading">Create your DecodeLabs account</div>
+          <div class="sub">HTML Form &nbsp;·&nbsp; index.html</div>
+        </div>
+        <div class="traffic" aria-hidden="true"><i></i><i></i><i></i></div>
+      </div>
+
+      <form class="rf" id="registrationForm" novalidate>
+
+        <!-- NAME -->
+        <div class="field" data-field="name" data-state="idle">
+          <label for="name">
+            Full name <span class="req" aria-hidden="true">*</span>
+            <span class="hint">letters &amp; spaces · 2+ chars</span>
+          </label>
+          <div class="control">
+            <input
+              type="text"
+              id="name"
+              name="name"
+              autocomplete="name"
+              placeholder="Ada Lovelace"
+              required
+              minlength="2"
+              aria-required="true"
+              aria-invalid="false"
+              aria-describedby="name-msg"
+            />
+            <span class="icon ok" aria-hidden="true">✓</span>
+            <span class="icon bad" aria-hidden="true">!</span>
+          </div>
+          <span class="msg" id="name-msg" data-default="Your full legal name — used on your certificate.">
+            Your full legal name — used on your certificate.
+          </span>
+        </div>
+
+        <!-- EMAIL -->
+        <div class="field" data-field="email" data-state="idle">
+          <label for="email">
+            Email address <span class="req" aria-hidden="true">*</span>
+            <span class="hint">RFC 5322 syntax check</span>
+          </label>
+          <div class="control">
+            <input
+              type="email"
+              id="email"
+              name="email"
+              autocomplete="email"
+              placeholder="ada@decodelabs.tech"
+              required
+              aria-required="true"
+              aria-invalid="false"
+              aria-describedby="email-msg"
+            />
+            <span class="icon ok" aria-hidden="true">✓</span>
+            <span class="icon bad" aria-hidden="true">!</span>
+          </div>
+          <span class="msg" id="email-msg" data-default="We only validate syntax — the ruler, not the inbox.">
+            We only validate syntax — the ruler, not the inbox.
+          </span>
+        </div>
+
+        <!-- PASSWORD -->
+        <div class="field" data-field="password" data-state="idle">
+          <label for="password">
+            Password <span class="req" aria-hidden="true">*</span>
+            <span class="hint">8+ · A-Z · a-z · 0-9 · symbol</span>
+          </label>
+          <div class="control">
+            <input
+              type="password"
+              id="password"
+              name="password"
+              autocomplete="new-password"
+              placeholder="••••••••"
+              required
+              aria-required="true"
+              aria-invalid="false"
+              aria-describedby="password-msg password-strength-msg"
+            />
+            <span class="icon ok" aria-hidden="true">✓</span>
+            <span class="icon bad" aria-hidden="true">!</span>
+          </div>
+          <div class="strength" data-level="0" aria-hidden="true">
+            <i></i><i></i><i></i><i></i><i></i>
+          </div>
+          <span class="msg" id="password-msg" data-default="All four scanners must pass. One miss and the payload is rejected.">
+            All four scanners must pass. One miss and the payload is rejected.
+          </span>
+          <span class="sr-only" id="password-strength-msg" aria-live="polite"></span>
+        </div>
+
+        <!-- CONFIRM -->
+        <div class="field" data-field="confirm" data-state="idle">
+          <label for="confirm">
+            Confirm password <span class="req" aria-hidden="true">*</span>
+            <span class="hint">must match exactly</span>
+          </label>
+          <div class="control">
+            <input
+              type="password"
+              id="confirm"
+              name="confirm"
+              autocomplete="new-password"
+              placeholder="••••••••"
+              required
+              aria-required="true"
+              aria-invalid="false"
+              aria-describedby="confirm-msg"
+            />
+            <span class="icon ok" aria-hidden="true">✓</span>
+            <span class="icon bad" aria-hidden="true">!</span>
+          </div>
+          <span class="msg" id="confirm-msg" data-default="Guards against typos. Re-enter the same password.">
+            Guards against typos. Re-enter the same password.
+          </span>
+        </div>
+
+        <!-- ACTIONS -->
+        <div class="actions">
+          <button type="submit" class="btn primary" id="submitBtn">Submit &amp; Validate</button>
+          <button type="reset" class="btn ghost" id="resetBtn">Reset</button>
+          <span style="margin-left:auto; font: 500 11.5px/1 var(--mono); color: var(--muted); letter-spacing:.06em;">
+            <span id="fieldsCount">0</span>/4 fields cleared
+          </span>
+        </div>
+
+        <!-- BANNER (polite live region) -->
+        <div class="banner" id="topBanner" role="status" aria-live="polite">
+          <span class="badge" id="bannerBadge">STATUS</span>
+          <span id="bannerText"></span>
+        </div>
+
+      </form>
+    </section>
+
+    <!-- RIGHT: inspector -->
+    <aside class="card inspector" aria-label="Validation engine inspector">
+      <div class="card-head">
+        <div>
+          <div class="t">Validation Engine · Inspector</div>
+          <div class="sub">Regex gates &nbsp;·&nbsp; ARIA tether &nbsp;·&nbsp; JSON payload</div>
+        </div>
+        <div class="traffic" aria-hidden="true"><i></i><i></i><i></i></div>
+      </div>
+
+      <div class="insp-body">
+
+        <!-- Regex gates panel -->
+        <div>
+          <div class="payload-head" style="margin-bottom:10px;">
+            <span>Regex Logic Gates</span>
+            <span class="state" id="gatesState">0 / 5 pass</span>
+          </div>
+          <div class="gates" id="gates">
+            <div class="gate" data-gate="name" data-status="idle">
+              <span class="dot"></span>
+              <div>
+                <div class="label">Name — letters &amp; spaces</div>
+                <div class="re">/^[A-Za-zÀ-ÿ' -]{2,}$/</div>
+              </div>
+              <span class="verdict">idle</span>
+            </div>
+            <div class="gate" data-gate="email" data-status="idle">
+              <span class="dot"></span>
+              <div>
+                <div class="label">Email — RFC 5322 syntax</div>
+                <div class="re">/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/</div>
+              </div>
+              <span class="verdict">idle</span>
+            </div>
+            <div class="gate" data-gate="pwLen" data-status="idle">
+              <span class="dot"></span>
+              <div>
+                <div class="label">Password — length gate</div>
+                <div class="re">/.{8,}/</div>
+              </div>
+              <span class="verdict">idle</span>
+            </div>
+            <div class="gate" data-gate="pwComplex" data-status="idle">
+              <span class="dot"></span>
+              <div>
+                <div class="label">Password — complexity scanners</div>
+                <div class="re">(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[^\w])</div>
+              </div>
+              <span class="verdict">idle</span>
+            </div>
+            <div class="gate" data-gate="match" data-status="idle">
+              <span class="dot"></span>
+              <div>
+                <div class="label">Confirm — exact match</div>
+                <div class="re">password === confirm</div>
+              </div>
+              <span class="verdict">idle</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- JSON payload -->
+        <div>
+          <div class="payload-head" style="margin-bottom:10px;">
+            <span>Outbound Payload · JSON</span>
+            <span class="state" id="payloadState">DRAFTING</span>
+          </div>
+          <pre class="payload" id="payloadPre" aria-live="off">{
+  <span class="k">"name"</span>: <span class="s">""</span>,
+  <span class="k">"email"</span>: <span class="s">""</span>,
+  <span class="k">"password"</span>: <span class="s">"[redacted]"</span>,
+  <span class="k">"validated"</span>: <span class="b">false</span>,
+  <span class="k">"submittedAt"</span>: <span class="n">null</span>
+}</pre>
+        </div>
+
+        <!-- ARIA tether -->
+        <div class="a11y-panel" aria-hidden="true">
+          <h4>ARIA Live Region <span style="opacity:.6;">(aria-live="polite")</span></h4>
+          Assistive tech hears this stream — <code>aria-invalid</code> &amp; <code>aria-describedby</code>
+          tether each error to its field.
+          <span class="now" id="ariaMirror"></span>
+        </div>
+
+      </div>
+    </aside>
+
+  </main>
+
+  <!-- Hidden dedicated live region for screen readers only -->
+  <div id="liveRegion" class="sr-only" role="status" aria-live="polite" aria-atomic="true"></div>
+
+  <div class="footnote">
+    You are not just coding a form. You are architecting <strong>trust</strong>.
+    &nbsp;·&nbsp; DecodeLabs Frontend Track &nbsp;·&nbsp; Greater Lucknow, India
+  </div>
+</div>
+
+<script>
+/* ===========================================================
+   Project 4 — Form Design & Validation
+   Structure → Shield → Scan → Communicate
+   =========================================================== */
+
+(() => {
+  'use strict';
+
+  // ---- 1. Element handles ----------------------------------
+  const form   = document.getElementById('registrationForm');
+  const fields = {
+    name:     document.getElementById('name'),
+    email:    document.getElementById('email'),
+    password: document.getElementById('password'),
+    confirm:  document.getElementById('confirm'),
+  };
+  const wrappers = {
+    name:     form.querySelector('[data-field="name"]'),
+    email:    form.querySelector('[data-field="email"]'),
+    password: form.querySelector('[data-field="password"]'),
+    confirm:  form.querySelector('[data-field="confirm"]'),
+  };
+  const msgs = {
+    name:     document.getElementById('name-msg'),
+    email:    document.getElementById('email-msg'),
+    password: document.getElementById('password-msg'),
+    confirm:  document.getElementById('confirm-msg'),
+  };
+  const strengthBar = form.querySelector('.strength');
+  const strengthSR  = document.getElementById('password-strength-msg');
+  const banner      = document.getElementById('topBanner');
+  const bannerText  = document.getElementById('bannerText');
+  const bannerBadge = document.getElementById('bannerBadge');
+  const liveRegion  = document.getElementById('liveRegion');
+  const ariaMirror  = document.getElementById('ariaMirror');
+  const fieldsCount = document.getElementById('fieldsCount');
+  const gatesState  = document.getElementById('gatesState');
+  const payloadPre  = document.getElementById('payloadPre');
+  const payloadState= document.getElementById('payloadState');
+  const phaseEls    = document.querySelectorAll('.phase');
+  const submitBtn   = document.getElementById('submitBtn');
+  const resetBtn    = document.getElementById('resetBtn');
+
+  // ---- 2. Regex logic gates --------------------------------
+  const REGEX = {
+    name:      /^[A-Za-zÀ-ÿ' -]{2,}$/,
+    email:     /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/,
+    pwLen:     /.{8,}/,
+    pwUpper:   /[A-Z]/,
+    pwLower:   /[a-z]/,
+    pwDigit:   /\d/,
+    pwSymbol:  /[^A-Za-z0-9]/,
+  };
+
+  // ---- 3. Per-field validators — return {ok, msg} ----------
+  const validators = {
+    name(v){
+      if(!v) return { ok:false, msg:'Name is required.' };
+      if(v.trim().length < 2) return { ok:false, msg:'At least 2 characters.' };
+      if(!REGEX.name.test(v.trim())) return { ok:false, msg:'Letters, spaces, apostrophes and hyphens only.' };
+      return { ok:true, msg:'Name looks good.' };
+    },
+    email(v){
+      if(!v) return { ok:false, msg:'Email is required.' };
+      if(!REGEX.email.test(v.trim())) return { ok:false, msg:'That doesn\u2019t look like a valid email address.' };
+      return { ok:true, msg:'Syntax OK — the ruler is happy.' };
+    },
+    password(v){
+      if(!v) return { ok:false, msg:'Password is required.' };
+      const missing = [];
+      if(!REGEX.pwLen.test(v))    missing.push('8+ chars');
+      if(!REGEX.pwUpper.test(v))  missing.push('an uppercase');
+      if(!REGEX.pwLower.test(v))  missing.push('a lowercase');
+      if(!REGEX.pwDigit.test(v))  missing.push('a digit');
+      if(!REGEX.pwSymbol.test(v)) missing.push('a symbol');
+      if(missing.length) return { ok:false, msg:'Add ' + missing.join(', ') + '.' };
+      return { ok:true, msg:'All four complexity scanners passed.' };
+    },
+    confirm(v){
+      const pw = fields.password.value;
+      if(!v) return { ok:false, msg:'Please re-enter your password.' };
+      if(v !== pw) return { ok:false, msg:'Passwords don\u2019t match.' };
+      return { ok:true, msg:'Match confirmed.' };
+    }
+  };
+
+  // ---- 4. Field UI updater ---------------------------------
+  function setFieldState(key, ok, msg, touched){
+    const wrap = wrappers[key];
+    const input= fields[key];
+    const msgEl= msgs[key];
+
+    if(!touched){
+      wrap.dataset.state = 'idle';
+      input.setAttribute('aria-invalid','false');
+      msgEl.textContent = msgEl.dataset.default;
+      return;
+    }
+    if(ok){
+      wrap.dataset.state = 'valid';
+      input.setAttribute('aria-invalid','false');
+      msgEl.textContent = msg;
+    } else {
+      wrap.dataset.state = 'invalid';
+      input.setAttribute('aria-invalid','true');
+      msgEl.textContent = msg;
+    }
+  }
+
+  // ---- 5. Inspector: gates ---------------------------------
+  function updateGates(v){
+    const g = {
+      name:      REGEX.name.test((v.name||'').trim()),
+      email:     REGEX.email.test((v.email||'').trim()),
+      pwLen:     REGEX.pwLen.test(v.password||''),
+      pwComplex: REGEX.pwUpper.test(v.password||'') && REGEX.pwLower.test(v.password||'') &&
+                 REGEX.pwDigit.test(v.password||'') && REGEX.pwSymbol.test(v.password||''),
+      match:     (v.password||'') !== '' && v.password === v.confirm,
+    };
+    let pass = 0;
+    Object.keys(g).forEach(k => {
+      const gate = document.querySelector(`.gate[data-gate="${k}"]`);
+      if(!gate) return;
+      const empty = k === 'name' ? !v.name : k === 'email' ? !v.email :
+                    (k === 'pwLen' || k === 'pwComplex') ? !v.password :
+                    k === 'match' ? !v.confirm : false;
+      let status = 'idle';
+      if(!empty){ status = g[k] ? 'pass' : 'fail'; }
+      gate.dataset.status = status;
+      gate.querySelector('.verdict').textContent =
+        status === 'pass' ? 'pass' : status === 'fail' ? 'fail' : 'idle';
+      if(g[k]) pass++;
+    });
+    gatesState.textContent = `${pass} / 5 pass`;
+    return pass;
+  }
+
+  // ---- 6. Inspector: JSON payload --------------------------
+  const esc = s => String(s).replace(/[\\"]/g, m => '\\' + m);
+  function updatePayload(v, submitted){
+    const validated = submitted && v.allOk === true;
+    const iso = validated ? new Date().toISOString() : null;
+    const html = [
+      '{',
+      `  <span class="k">"name"</span>: <span class="s">"${esc(v.name || '')}"</span>,`,
+      `  <span class="k">"email"</span>: <span class="s">"${esc(v.email || '')}"</span>,`,
+      `  <span class="k">"password"</span>: <span class="s">"${v.password ? '[redacted · '+v.password.length+' chars]' : ''}"</span>,`,
+      `  <span class="k">"validated"</span>: <span class="b">${validated}</span>,`,
+      `  <span class="k">"submittedAt"</span>: ${iso ? '<span class="s">"'+iso+'"</span>' : '<span class="n">null</span>'}`,
+      '}'
+    ].join('\n');
+    payloadPre.innerHTML = html;
+
+    if(validated){
+      payloadState.textContent = 'APPROVED';
+      payloadState.className = 'state approved';
+    } else if(submitted){
+      payloadState.textContent = 'REJECTED';
+      payloadState.className = 'state rejected';
+    } else {
+      payloadState.textContent = 'DRAFTING';
+      payloadState.className = 'state';
+    }
+  }
+
+  // ---- 7. Password strength meter --------------------------
+  function updateStrength(pw){
+    let score = 0;
+    if(REGEX.pwLen.test(pw))    score++;
+    if(REGEX.pwUpper.test(pw))  score++;
+    if(REGEX.pwLower.test(pw))  score++;
+    if(REGEX.pwDigit.test(pw))  score++;
+    if(REGEX.pwSymbol.test(pw)) score++;
+    strengthBar.dataset.level = String(score);
+    const labels = ['empty','very weak','weak','fair','strong','excellent'];
+    strengthSR.textContent = pw ? `Password strength: ${labels[score]}` : '';
+  }
+
+  // ---- 8. ARIA tether: announce first error politely --------
+  let lastAnnounced = '';
+  function announce(text){
+    if(text === lastAnnounced) return;
+    lastAnnounced = text;
+    liveRegion.textContent = '';
+    // slight defer so AT picks up mutation
+    setTimeout(() => {
+      liveRegion.textContent = text;
+      ariaMirror.textContent = text;
+    }, 30);
+  }
+
+  // ---- 9. Banner control -----------------------------------
+  function showBanner(kind, badge, text){
+    banner.classList.remove('error','success');
+    banner.classList.add(kind, 'show');
+    bannerBadge.textContent = badge;
+    bannerText.textContent = text;
+  }
+  function hideBanner(){ banner.classList.remove('show','error','success'); }
+
+  // ---- 10. Phase progress ---------------------------------
+  function updatePhases(passCount){
+    const p3 = document.querySelector('.phase[data-phase="3"]');
+    const p4 = document.querySelector('.phase[data-phase="4"]');
+    if(passCount >= 5){
+      p3.dataset.active = '1';
+      p4.dataset.active = '1';
+    } else if(passCount > 0){
+      p3.dataset.active = '0.5';
+      p4.dataset.active = '0';
+    } else {
+      p3.dataset.active = '0';
+      p4.dataset.active = '0';
+    }
+  }
+
+  // ---- 11. Master pass — validate everything, update UI ----
+  const touched = { name:false, email:false, password:false, confirm:false };
+
+  function readValues(){
+    return {
+      name:     fields.name.value,
+      email:    fields.email.value,
+      password: fields.password.value,
+      confirm:  fields.confirm.value,
+    };
+  }
+
+  function validateAll({ submitted=false, forceTouchAll=false } = {}){
+    const v = readValues();
+    const results = {};
+    let cleared = 0;
+    let allOk = true;
+
+    for(const k of ['name','email','password','confirm']){
+      const r = validators[k](v[k]);
+      results[k] = r;
+      const isTouched = forceTouchAll || touched[k];
+      setFieldState(k, r.ok, r.msg, isTouched);
+      if(r.ok) cleared++;
+      if(!r.ok) allOk = false;
+    }
+
+    fieldsCount.textContent = String(cleared);
+
+    // strength meter
+    updateStrength(v.password || '');
+
+    // inspector
+    const passCount = updateGates(v);
+    updatePayload({ ...v, allOk }, submitted);
+    updatePhases(passCount);
+
+    return { v, results, allOk };
+  }
+
+  // ---- 12. Event wiring ------------------------------------
+  // On input: mark touched, live-validate quietly
+  Object.entries(fields).forEach(([key, input]) => {
+    input.addEventListener('input', () => {
+      touched[key] = true;
+      // when password changes, force re-check of confirm too
+      if(key === 'password') touched.confirm = touched.confirm || fields.confirm.value.length > 0;
+      hideBanner();
+      validateAll();
+    });
+    input.addEventListener('blur', () => {
+      if(input.value.length > 0) touched[key] = true;
+      validateAll();
+    });
+  });
+
+  // On submit: THE SHIELD — preventDefault, then run the engine
+  form.addEventListener('submit', (event) => {
+    event.preventDefault();      // Phase 2 — stop the browser's default GET refresh
+    event.stopPropagation();
+
+    const { v, results, allOk } = validateAll({ submitted:true, forceTouchAll:true });
+
+    if(allOk){
+      showBanner(
+        'success',
+        'APPROVED',
+        `Payload accepted. Welcome, ${v.name.split(' ')[0]} — your JSON envelope is ready for transmission.`
+      );
+      announce(`Form submitted successfully. Welcome, ${v.name.split(' ')[0]}.`);
+      submitBtn.textContent = 'Resubmit';
+    } else {
+      // ARIA — announce the first failing field
+      const firstFail = ['name','email','password','confirm'].find(k => !results[k].ok);
+      const firstMsg  = results[firstFail].msg;
+      showBanner(
+        'error',
+        'REJECTED',
+        `${Object.values(results).filter(r=>!r.ok).length} of 4 checks failed. First issue: ${firstMsg}`
+      );
+      announce(`Submission failed. ${firstMsg}`);
+      // focus the first failing field for keyboard users
+      fields[firstFail].focus();
+    }
+  });
+
+  // Reset — return to a clean drafting state
+  resetBtn.addEventListener('click', () => {
+    setTimeout(() => {
+      Object.keys(touched).forEach(k => touched[k] = false);
+      hideBanner();
+      lastAnnounced = '';
+      ariaMirror.textContent = '';
+      liveRegion.textContent = '';
+      submitBtn.textContent = 'Submit & Validate';
+      validateAll();
+    }, 0);
+  });
+
+  // Initial render
+  validateAll();
+
+})();
+</script>
+</body>
+</html>
