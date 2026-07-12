@@ -153,49 +153,6 @@ The **featured pricing card** moves to the top on mobile via `order: -1` so the 
 
 ---
 
-## 🎨 Design Tokens
-
-All tokens are defined as CSS custom properties in `index.html`. Dark-mode values override via `[data-theme="dark"]`.
-
-### Colors
-
-| Token | Light | Dark | Usage |
-|---|---|---|---|
-| `--bg` | `#faf7f2` | `#14100d` | Page background |
-| `--surface` | `#ffffff` | `#1c1714` | Cards, form |
-| `--surface-2` | `#f3ede4` | `#221c18` | Alternating section bg |
-| `--text` | `#201a15` | `#f2ece3` | Primary text |
-| `--text-muted` | `#6b5f55` | `#a89b8d` | Secondary / caption text |
-| `--border` | `#e8ded1` | `#2c2520` | Hairlines, card borders |
-| `--accent` | `#6f4e37` | `#c9a27a` | Brand colour, CTAs |
-| `--accent-soft` | `#efe4d8` | `#2a2119` | Icon tiles, eyebrow bg |
-
-### Typography Scale
-
-| Role | Size | Weight |
-|---|---|---|
-| Hero `h1` | `clamp(2.2rem, 5.2vw, 4rem)` | 700 |
-| Section `h2` | `clamp(1.8rem, 3.6vw, 2.6rem)` | 700 |
-| Card `h3` | `1.15rem` | 600 |
-| Body | `1rem` | 400 |
-| Eyebrow | `0.8rem` / uppercase / `0.12em` tracking | 600 |
-| Price amount | `2.6rem` | 700 |
-
-### Spacing Scale (8px base)
-
-| Token | Value |
-|---|---|
-| `--s-1` | `4px` |
-| `--s-2` | `8px` |
-| `--s-3` | `16px` |
-| `--s-4` | `24px` |
-| `--s-5` | `32px` |
-| `--s-6` | `48px` |
-| Section padding | `clamp(56px, 9vw, 110px)` |
-| Container max-width | `1180px` |
-
----
-
 ## 🖼️ Images Used
 
 | Image | Source | Used In |
