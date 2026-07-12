@@ -124,29 +124,7 @@ cd Decode-Labs-Internship-Tasks/Task1_portfolio
 
 ---
 
-## 📄 Pages
 
-| File | URL | Description |
-|---|---|---|
-| `index.html` | `/` | Home — hero, selected projects, skills section |
-| `about.html` | `/about.html` | About — personal bio, portrait, education timeline |
-| `contact.html` | `/contact.html` | Contact — message form, email, social links |
-
----
-
-## 🎨 Design Tokens (from `style.css`)
-
-| Token | Value | Usage |
-|---|---|---|
-| `--ink` | `#14110f` | Primary text, buttons |
-| `--ink-soft` | `#2a2622` | Secondary / prose text |
-| `--muted` | `#6b6660` | Labels, captions, meta |
-| `--rule` | `#d9d4cc` | Hairline borders, dividers |
-| `--paper` | `#fafaf7` | Page background |
-| `--font-serif` | Fraunces | Display headings |
-| `--font-sans` | Inter | Body text, labels |
-
----
 
 ## 🏫 Internship Context
 
